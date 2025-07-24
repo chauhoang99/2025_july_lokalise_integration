@@ -35,10 +35,7 @@ class TranslationService:
         headers = {
             "Authorization": f"Bearer {self.openrouter_api_key}",
             "Content-Type": "application/json",
-            "HTTP-Referer": "${YOUR_SITE_URL}",  # Replace with your site URL
-            "X-Title": "Lokalise AI Translation"
         }
-
         data = {
             "model": "openai/gpt-3.5-turbo",  # Free model for POC
             "messages": [{"role": "user", "content": prompt}]

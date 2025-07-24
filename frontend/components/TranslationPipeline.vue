@@ -165,7 +165,7 @@
                   <div class="mt-1">{{ (detail.bleu_score * 100).toFixed(2) }}%</div>
                 </template>
                 <template v-else>
-                  <div class="text-gray-500">Computing...</div>
+                  <div class="text-gray-500">N/A</div>
                 </template>
               </template>
             </div>
