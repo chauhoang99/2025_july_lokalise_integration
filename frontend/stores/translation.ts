@@ -30,8 +30,6 @@ export const useTranslationStore = defineStore('translation', {
     isLoading: false,
     isProcessing: false,
     error: null as string | null,
-    uploadStatus: null,
-    processId: null,
     lastResult: null as TranslationResult | null
   }),
 
@@ -54,23 +52,9 @@ export const useTranslationStore = defineStore('translation', {
           }
         )
 
-        this.processId = response.data.process_id
         return response.data
       } catch (error: any) {
         throw new Error(error.response?.data?.error || 'File upload failed')
-      }
-    },
-
-    async checkUploadStatus(processId: string) {
-      try {
-        const response = await axios.post(
-          `${config.baseURL}/translations/check-upload-status/`,
-          { process_id: processId }
-        )
-        this.uploadStatus = response.data.status
-        return response.data
-      } catch (error: any) {
-        throw new Error(error.response?.data?.error || 'Status check failed')
       }
     },
 

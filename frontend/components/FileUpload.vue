@@ -160,33 +160,10 @@ const uploadFile = async () => {
     
     uploadResult.value = result
 
-    // Start polling for status if we have a process ID
-    if (result.process_id) {
-      pollUploadStatus(result.process_id)
-    }
-
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Upload failed'
   } finally {
     isLoading.value = false
-  }
-}
-
-const pollUploadStatus = async (processId: string) => {
-  try {
-    const result = await translationStore.checkUploadStatus(processId)
-    
-    if (result.status === 'processing') {
-      // Poll again in 2 seconds
-      setTimeout(() => pollUploadStatus(processId), 2000)
-    }
-    
-    uploadResult.value = {
-      ...uploadResult.value,
-      status: result.status
-    }
-  } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Status check failed'
   }
 }
 </script> 

@@ -1,19 +1,9 @@
 from rest_framework import serializers
 
-class TranslationRequestSerializer(serializers.Serializer):
-    source_text = serializers.CharField(required=True)
-    target_language = serializers.CharField(required=True)
-
 class QualityCheckSerializer(serializers.Serializer):
     source_text = serializers.CharField(required=True)
     translated_text = serializers.CharField(required=True)
     target_language = serializers.CharField(required=True)
-
-class TranslationFineTuneSerializer(serializers.Serializer):
-    source_text = serializers.CharField(required=True)
-    translated_text = serializers.CharField(required=True)
-    target_language = serializers.CharField(required=True)
-    feedback = serializers.CharField(required=True)
 
 class FileUploadSerializer(serializers.Serializer):
     file = serializers.FileField(required=True)
@@ -34,7 +24,4 @@ class FileUploadSerializer(serializers.Serializer):
 
     def validate_lang_iso(self, value):
         # Add validation for supported languages if needed
-        return value.lower()
-
-class ProcessIdSerializer(serializers.Serializer):
-    process_id = serializers.CharField(required=True) 
+        return value.lower() 

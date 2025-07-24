@@ -3,11 +3,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from .services import TranslationService
 from .serializers import (
-    TranslationRequestSerializer,
-    QualityCheckSerializer,
-    TranslationFineTuneSerializer,
     FileUploadSerializer,
-    ProcessIdSerializer
+    QualityCheckSerializer
 )
 from typing import Dict, Any
 from .services.translation_pipeline import TranslationPipeline
@@ -44,64 +41,6 @@ class TranslationViewSet(viewsets.ViewSet):
             )
 
             return Response(result, status=status.HTTP_200_OK)
-
-        except Exception as e:
-            return Response(
-                {"error": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    @action(detail=False, methods=['POST'], url_path='check-upload-status')
-    def check_upload_status(self, request) -> Response:
-        """
-        Check the status of a file upload process
-        """
-        serializer = ProcessIdSerializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(
-                serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        try:
-            result = self.lokalise_service.check_upload_status(
-                process_id=serializer.validated_data['process_id']
-            )
-
-            return Response(result, status=status.HTTP_200_OK)
-
-        except Exception as e:
-            return Response(
-                {"error": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    @action(detail=False, methods=['post'])
-    def translate(self, request) -> Response:
-        """
-        Translate text using AI
-        """
-        try:
-            source_text = request.data.get('source_text')
-            target_language = request.data.get('target_language')
-
-            if not all([source_text, target_language]):
-                return Response(
-                    {"error": "Missing required fields"},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-
-            # Get glossary terms
-            glossary_terms = self.lokalise_service.get_glossary()
-
-            # Translate with glossary guidance
-            translated_text = self.translation_pipeline.translate_with_glossary(
-                source_text, target_language, glossary_terms
-            )
-
-            return Response({
-                "translated_text": translated_text
-            }, status=status.HTTP_200_OK)
 
         except Exception as e:
             return Response(
@@ -183,32 +122,6 @@ class TranslationViewSet(viewsets.ViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-    @action(detail=False, methods=['post'])
-    async def process_lokalise_translations(self, request) -> Response:
-        """
-        Process untranslated keys from Lokalise
-        """
-        try:
-            target_language = request.data.get('target_language')
-
-            if not target_language:
-                return Response(
-                    {"error": "Target language is required"},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-
-            results = await self.translation_pipeline.process_untranslated_keys(target_language)
-
-            return Response({
-                "processed_keys": results
-            }, status=status.HTTP_200_OK)
-
-        except Exception as e:
-            return Response(
-                {"error": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            ) 
-
     @action(detail=False, methods=['POST'], url_path='process-translations')
     def process_translations(self, request) -> Response:
         """
@@ -217,7 +130,6 @@ class TranslationViewSet(viewsets.ViewSet):
         2. Translate each key using AI
         3. Upload translations back to Lokalise
         """
-        # try:
         target_language = request.data.get('target_language')
         source_language = request.data.get('source_language', 'en')
         force_translate = request.data.get('force_translate', False)
@@ -245,63 +157,4 @@ class TranslationViewSet(viewsets.ViewSet):
             'details': results
         }
 
-        return Response(summary, status=status.HTTP_200_OK)
-
-        # except Exception as e:
-        #     return Response(
-        #         {"error": str(e)},
-        #         status=status.HTTP_500_INTERNAL_SERVER_ERROR
-        #     )
-
-    @action(detail=False, methods=['GET'], url_path='translation-status')
-    def get_translation_status(self, request) -> Response:
-        """
-        Get translation status for a language
-        """
-        try:
-            target_language = request.query_params.get('target_language')
-
-            if not target_language:
-                return Response(
-                    {"error": "Target language is required"},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-
-            # Convert async call to sync
-            all_keys = async_to_sync(self.lokalise_service.get_all_keys)(include_translations=True)
-            
-            # Analyze translation status
-            total_keys = len(all_keys)
-            translated_keys = [
-                key for key in all_keys 
-                if target_language in key['translations'] 
-                and key['translations'][target_language].get('translation', '')
-            ]
-            reviewed_keys = [
-                key for key in translated_keys 
-                if key['translations'][target_language].get('is_reviewed', False)
-            ]
-            fuzzy_keys = [
-                key for key in translated_keys 
-                if key['translations'][target_language].get('is_fuzzy', False)
-            ]
-            
-            status_summary = {
-                'target_language': target_language,
-                'total_keys': total_keys,
-                'translated_keys_count': len(translated_keys),
-                'untranslated_keys_count': total_keys - len(translated_keys),
-                'reviewed_keys_count': len(reviewed_keys),
-                'fuzzy_keys_count': len(fuzzy_keys),
-                'translation_progress': f"{(len(translated_keys) / total_keys * 100):.1f}%",
-                'review_progress': f"{(len(reviewed_keys) / total_keys * 100):.1f}%",
-                'keys': all_keys
-            }
-
-            return Response(status_summary, status=status.HTTP_200_OK)
-
-        except Exception as e:
-            return Response(
-                {"error": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            ) 
+        return Response(summary, status=status.HTTP_200_OK) 
