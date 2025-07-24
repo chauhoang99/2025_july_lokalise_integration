@@ -22,6 +22,7 @@ interface TranslationResult {
     is_new_translation?: boolean
     reason?: string
     error?: string
+    bleu_score?: number
   }>
 }
 
@@ -58,12 +59,13 @@ export const useTranslationStore = defineStore('translation', {
       }
     },
 
-    async checkQuality(sourceText: string, translatedText: string, targetLanguage: string) {
+    async checkQuality(targetLanguage: string, sourceText: string, referenceTranslation: string, candidateTranslation: string) {
       try {
         const response = await axios.post(`${config.baseURL}/translations/check_quality/`, {
-          source_text: sourceText,
-          translated_text: translatedText,
-          target_language: targetLanguage
+          target_language: targetLanguage,
+          existing_translation: referenceTranslation,
+          llm_translation: candidateTranslation,
+          source_text: sourceText
         })
         return response.data
       } catch (error: any) {
@@ -76,6 +78,7 @@ export const useTranslationStore = defineStore('translation', {
       this.error = null
       
       try {
+        // First, get translations
         const response = await fetch(`${config.baseURL}/translations/process-translations/`, {
           method: 'POST',
           headers: {
@@ -92,7 +95,46 @@ export const useTranslationStore = defineStore('translation', {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
 
-        this.lastResult = await response.json()
+        // Store initial results
+        const translationResult = await response.json()
+        this.lastResult = translationResult
+
+        // Then, compute BLEU scores for successful translations
+        if (translationResult?.details) {
+          const successfulTranslations = translationResult.details.filter(
+            detail => detail.status === 'success' && detail.translated_text && detail.existing_translation
+          )
+
+          // Process translations sequentially to avoid overwhelming the API
+          for (const detail of successfulTranslations) {
+            if (!detail.translated_text || !detail.existing_translation) continue
+
+            try {
+              const result = await this.checkQuality(
+                targetLanguage,
+                detail.source_text || '',
+                detail.existing_translation,
+                detail.translated_text
+              )
+
+              // Create a new details array with the updated BLEU score
+              const updatedDetails = this.lastResult!.details.map(d => {
+                if (d.key_id === detail.key_id) {
+                  return { ...d, bleu_score: result.bleu_score }
+                }
+                return d
+              })
+
+              // Update the store with the new details array
+              this.lastResult = {
+                ...this.lastResult!,
+                details: updatedDetails
+              }
+            } catch (error) {
+              console.error('Failed to compute BLEU score:', error)
+            }
+          }
+        }
       } catch (error) {
         this.error = error instanceof Error ? error.message : 'An error occurred'
       } finally {

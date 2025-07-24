@@ -102,66 +102,72 @@
 
       <!-- Detailed Results -->
       <div class="mt-4">
-        <button
-          @click="showDetails = !showDetails"
-          class="text-sm text-indigo-600 hover:text-indigo-500"
-        >
-          {{ showDetails ? 'Hide' : 'Show' }} Details
-        </button>
-        <div v-if="showDetails" class="mt-4">
-          <!-- Table Headers -->
-          <div class="grid grid-cols-3 gap-4 mb-2 font-medium text-gray-700 bg-gray-50 p-2 rounded-t-md">
-            <div>Source Text ({{ sourceLanguage }})</div>
-            <div>Existing Translation</div>
-            <div>LLM Translation</div>
-          </div>
-          <!-- Table Content -->
-          <div class="space-y-2">
-            <div
-              v-for="detail in lastResult.details"
-              :key="detail.key_id"
-              class="grid grid-cols-3 gap-4 p-2 rounded-md"
-              :class="{
-                'bg-green-50': detail.status === 'success',
-                'bg-yellow-50': detail.status === 'skipped',
-                'bg-red-50': detail.status === 'error'
-              }"
-            >
-              <!-- Source Text -->
-              <div class="text-sm text-gray-700">{{ detail.source_text }}</div>
+        <!-- Table Headers -->
+        <div class="grid grid-cols-4 gap-4 mb-2 font-medium text-gray-700 bg-gray-50 p-2 rounded-t-md">
+          <div>Source Text ({{ sourceLanguage }})</div>
+          <div>Existing Translation</div>
+          <div>LLM Translation</div>
+          <div>BLEU Score</div>
+        </div>
+        <!-- Table Content -->
+        <div class="space-y-2">
+          <div
+            v-for="detail in lastResult.details"
+            :key="detail.key_id"
+            class="grid grid-cols-4 gap-4 p-2 rounded-md"
+            :class="{
+              'bg-green-50': detail.status === 'success',
+              'bg-yellow-50': detail.status === 'skipped',
+              'bg-red-50': detail.status === 'error'
+            }"
+          >
+            <!-- Source Text -->
+            <div class="text-sm text-gray-700">{{ detail.source_text }}</div>
 
-              <!-- Existing Translation -->
-              <div class="text-sm text-gray-700">
-                <template v-if="detail.status === 'skipped' && detail.reason === 'Translation already exists'">
-                  <div class="font-medium text-yellow-700">Existing Translation</div>
-                  <div class="mt-1">{{ detail.existing_translation }}</div>
+            <!-- Existing Translation -->
+            <div class="text-sm text-gray-700">
+              <template v-if="detail.existing_translation !== ''">
+                <div class="font-medium text-yellow-700">Existing Translation</div>
+                <div class="mt-1">{{ detail.existing_translation }}</div>
+              </template>
+              <template v-else>
+                <div class="font-medium text-gray-500">No existing translation</div>
+              </template>
+            </div>
+
+            <!-- LLM Translation -->
+            <div class="text-sm">
+              <template v-if="detail.status === 'success'">
+                <div class="font-medium text-green-700">New Translation</div>
+                <div class="mt-1 text-gray-700">{{ detail.translated_text }}</div>
+                <div class="mt-2 text-xs text-green-600" v-if="detail.is_new_translation">
+                  ✨ New Translation
+                </div>
+                <div class="mt-2 text-xs text-blue-600" v-else>
+                  🔄 Updated Translation
+                </div>
+              </template>
+              <template v-else-if="detail.status === 'skipped'">
+                <div class="font-medium text-yellow-700">Skipped</div>
+                <div class="mt-1 text-yellow-600">{{ detail.reason }}</div>
+              </template>
+              <template v-else>
+                <div class="font-medium text-red-700">Error</div>
+                <div class="mt-1 text-red-600">{{ detail.error }}</div>
+              </template>
+            </div>
+
+            <!-- BLEU Score -->
+            <div class="text-sm text-gray-700">
+              <template v-if="detail.status === 'success'">
+                <template v-if="detail.bleu_score !== undefined">
+                  <div class="font-medium">BLEU Score</div>
+                  <div class="mt-1">{{ (detail.bleu_score * 100).toFixed(2) }}%</div>
                 </template>
                 <template v-else>
-                  <div class="font-medium text-gray-500">No existing translation</div>
+                  <div class="text-gray-500">Computing...</div>
                 </template>
-              </div>
-
-              <!-- LLM Translation -->
-              <div class="text-sm">
-                <template v-if="detail.status === 'success'">
-                  <div class="font-medium text-green-700">New Translation</div>
-                  <div class="mt-1 text-gray-700">{{ detail.translated_text }}</div>
-                  <div class="mt-2 text-xs text-green-600" v-if="detail.is_new_translation">
-                    ✨ New Translation
-                  </div>
-                  <div class="mt-2 text-xs text-blue-600" v-else>
-                    🔄 Updated Translation
-                  </div>
-                </template>
-                <template v-else-if="detail.status === 'skipped'">
-                  <div class="font-medium text-yellow-700">Skipped</div>
-                  <div class="mt-1 text-yellow-600">{{ detail.reason }}</div>
-                </template>
-                <template v-else>
-                  <div class="font-medium text-red-700">Error</div>
-                  <div class="mt-1 text-red-600">{{ detail.error }}</div>
-                </template>
-              </div>
+              </template>
             </div>
           </div>
         </div>
@@ -180,7 +186,6 @@ const store = useTranslationStore()
 const sourceLanguage = ref('en')
 const targetLanguage = ref('')
 const forceTranslate = ref(false)
-const showDetails = ref(false)
 
 const isProcessing = computed(() => store.isProcessing)
 const error = computed(() => store.error)

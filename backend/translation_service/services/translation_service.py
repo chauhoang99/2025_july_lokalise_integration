@@ -2,6 +2,7 @@ import requests
 from django.conf import settings
 from lokalise import Client as LokaliseClient
 from typing import Dict, List, Optional
+from ..utils.bleu_scorer import compute_bleu_score
 
 class TranslationService:
     def __init__(self):
@@ -54,52 +55,28 @@ class TranslationService:
 
         return response.json()["choices"][0]["message"]["content"].strip()
 
-    def check_translation_quality(self, source_text: str, translated_text: str, target_language: str) -> Dict:
+    def check_translation_quality(self, source_text: str, reference_translation: str, candidate_translation: str) -> Dict:
         """
-        Use OpenRouter to analyze translation quality
+        Compute BLEU score for translation quality
+        
+        Args:
+            source_text: Original text (for reference)
+            reference_translation: Reference translation to compare against
+            candidate_translation: Candidate translation to evaluate
+            
+        Returns:
+            Dict containing BLEU score and translations
         """
-        prompt = f"""
-        You are a professional translation quality assessor. Analyze this translation pair and provide a detailed quality assessment:
+        bleu_score = compute_bleu_score(reference_translation, candidate_translation)
         
-        Source Text: {source_text}
-        Translated Text ({target_language}): {translated_text}
-        
-        Provide a structured analysis with:
-        1. Accuracy Score (0-100): How accurately the meaning is preserved
-        2. Fluency Score (0-100): How natural and fluent the translation reads
-        3. Terminology Score (0-100): Consistency and appropriateness of terminology
-        4. Cultural Appropriateness Score (0-100): Cultural adaptation and sensitivity
-        5. Overall Score (0-100): Weighted average of above scores
-        6. Specific Issues: List any problems found
-        7. Improvement Suggestions: Concrete ways to improve the translation
-        
-        Format the response as JSON with these exact keys:
-        accuracy_score, fluency_score, terminology_score, cultural_score, overall_score, issues, suggestions
-        """
-
-        headers = {
-            "Authorization": f"Bearer {self.openrouter_api_key}",
-            "Content-Type": "application/json",
-            "HTTP-Referer": "${YOUR_SITE_URL}",  # Replace with your site URL
-            "X-Title": "Lokalise Translation QA"
+        return {
+            "bleu_score": bleu_score,
+            "translations": {
+                "source_text": source_text,
+                "reference_translation": reference_translation,
+                "candidate_translation": candidate_translation
+            }
         }
-
-        data = {
-            "model": "anthropic/claude-3-opus-20240229",
-            "messages": [{"role": "user", "content": prompt}],
-            "response_format": { "type": "json_object" }
-        }
-
-        response = requests.post(
-            "https://openrouter.ai/api/v1/chat/completions",
-            headers=headers,
-            json=data
-        )
-
-        if response.status_code != 200:
-            raise Exception(f"OpenRouter API error: {response.text}")
-
-        return response.json()["choices"][0]["message"]["content"]
 
     def fine_tune_translation(self, source_text: str, initial_translation: str, 
                             glossary_terms: List[Dict], target_language: str) -> str:

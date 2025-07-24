@@ -169,6 +169,17 @@ Translation:"""
 
                 # Map results back to keys
                 for (key, source_text, target_trans, has_translation), translated_text in zip(keys_to_translate, translated_texts):
+                    results.append({
+                        'key_id': key['key_id'],
+                        'key_name': key['key_name'],
+                        'status': 'success',
+                        'source_text': source_text,
+                        'translated_text': translated_text,
+                        'existing_translation': target_trans.get('translation', ''),
+                        'is_new_translation': not has_translation
+                    })
+                    key['key_id'] = int(key['key_id'])
+
                     if target_trans == {}:
                         target_trans['translation'] = translated_text
                         target_trans['is_reviewed'] = False
@@ -180,16 +191,6 @@ Translation:"""
                     else:
                         target_trans['translation'] = translated_text
                         target_trans['key_id'] = int(key['key_id'])
-                    
-                    results.append({
-                        'key_id': key['key_id'],
-                        'key_name': key['key_name'],
-                        'status': 'success',
-                        'source_text': source_text,
-                        'translated_text': translated_text,
-                        'is_new_translation': not has_translation
-                    })
-                    key['key_id'] = int(key['key_id'])
 
             except Exception as e:
                 # If a translation fails, add error results for remaining keys

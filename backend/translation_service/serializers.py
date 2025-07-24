@@ -2,7 +2,8 @@ from rest_framework import serializers
 
 class QualityCheckSerializer(serializers.Serializer):
     source_text = serializers.CharField(required=True)
-    translated_text = serializers.CharField(required=True)
+    existing_translation = serializers.CharField(required=True)
+    llm_translation = serializers.CharField(required=True)
     target_language = serializers.CharField(required=True)
 
 class FileUploadSerializer(serializers.Serializer):
