@@ -5,20 +5,41 @@ const config = {
   baseURL: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8000/api'
 }
 
+interface TranslationResult {
+  total_processed: number
+  successful: number
+  failed: number
+  skipped: number
+  new_translations: number
+  updated_translations: number
+  details: Array<{
+    key_id: string
+    key_name: string
+    status: string
+    source_text?: string
+    translated_text?: string
+    existing_translation?: string
+    is_new_translation?: boolean
+    reason?: string
+    error?: string
+  }>
+}
+
 export const useTranslationStore = defineStore('translation', {
   state: () => ({
     isLoading: false,
-    error: null,
+    isProcessing: false,
+    error: null as string | null,
     uploadStatus: null,
-    processId: null
+    processId: null,
+    lastResult: null as TranslationResult | null
   }),
 
   actions: {
-    async uploadFile(file: File, targetLanguage: string, tags?: string[]) {
+    async uploadFile(file: File, tags?: string[]) {
       try {
         const formData = new FormData()
         formData.append('file', file)
-        formData.append('lang_iso', targetLanguage)
         if (tags && tags.length > 0) {
           tags.forEach(tag => formData.append('tags[]', tag))
         }
@@ -64,6 +85,40 @@ export const useTranslationStore = defineStore('translation', {
       } catch (error: any) {
         throw new Error(error.response?.data?.error || 'Quality check failed')
       }
+    },
+
+    async processTranslations(targetLanguage: string, sourceLanguage: string = 'en', forceTranslate: boolean = false) {
+      this.isProcessing = true
+      this.error = null
+      
+      try {
+        const response = await fetch(`${config.baseURL}/translations/process-translations/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            target_language: targetLanguage,
+            source_language: sourceLanguage,
+            force_translate: forceTranslate,
+          }),
+        })
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        this.lastResult = await response.json()
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'An error occurred'
+      } finally {
+        this.isProcessing = false
+      }
+    },
+
+    clearResults() {
+      this.lastResult = null
+      this.error = null
     }
   }
 }) 

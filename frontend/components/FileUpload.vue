@@ -49,19 +49,6 @@
       </div>
 
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Target Language</label>
-        <select
-          v-model="targetLanguage"
-          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-        >
-          <option value="">Select a language</option>
-          <option v-for="(name, code) in supportedLanguages" :key="code" :value="code">
-            {{ name }}
-          </option>
-        </select>
-      </div>
-
-      <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">Tags (optional)</label>
         <input
           v-model="tags"
@@ -134,19 +121,17 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useTranslationStore } from '~/stores/translation'
-import { supportedLanguages } from '~/constants/languages'
 
 const translationStore = useTranslationStore()
 
 const selectedFile = ref<File | null>(null)
-const targetLanguage = ref('')
 const tags = ref('')
 const isLoading = ref(false)
 const error = ref<string | null>(null)
 const uploadResult = ref<any>(null)
 
 const canUpload = computed(() => {
-  return selectedFile.value && targetLanguage.value !== ''
+  return selectedFile.value
 })
 
 const handleFileChange = (event: Event) => {
@@ -170,7 +155,6 @@ const uploadFile = async () => {
 
     const result = await translationStore.uploadFile(
       selectedFile.value,
-      targetLanguage.value,
       tagArray
     )
     

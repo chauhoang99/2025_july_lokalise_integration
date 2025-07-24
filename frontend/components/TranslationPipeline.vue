@@ -172,10 +172,10 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useTranslationPipelineStore } from '~/stores/translationPipeline'
+import { useTranslationStore } from '~/stores/translation'
 import { supportedLanguages } from '~/constants/languages'
 
-const store = useTranslationPipelineStore()
+const store = useTranslationStore()
 
 const sourceLanguage = ref('en')
 const targetLanguage = ref('')
