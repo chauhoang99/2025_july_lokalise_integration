@@ -1,0 +1,284 @@
+{
+  "translations": [
+    {
+      "term": "crypto dust",
+      "part_of_speech": "(n.)",
+      "description": "(n.) Very small crypto balance, trace amount of cryptocurrency that's leftover after a trade or transaction.",
+      "translations": [
+        {
+          "language_iso": "en",
+          "translation": "crypto dust"
+        },
+        {
+          "language_iso": "es",
+          "translation": "polvo de criptomonedas",
+          "description": "Updated from \"restos de criptomonedas\""
+        },
+        {
+          "language_iso": "fr",
+          "translation": "poussière crypto"
+        },
+        {
+          "language_iso": "it",
+          "translation": "cripto residui"
+        },
+        {
+          "language_iso": "ko",
+          "translation": "소액 가상자산"
+        }
+      ]
+    },
+    {
+      "term": "Defi Staking",
+      "part_of_speech": "DNT",
+      "description": "DNT. Product name. It allows users to stake their top DeFi crypto tokens to earn staking rewards.",
+      "translations": [
+        {
+          "language_iso": "en",
+          "translation": "Defi Staking",
+          "description": "DNT. Product name. It allows users to stake their top DeFi crypto tokens to earn staking rewards."
+        },
+        {
+          "language_iso": "es",
+          "translation": "Defi Staking"
+        },
+        {
+          "language_iso": "fr",
+          "translation": "Defi Staking"
+        },
+        {
+          "language_iso": "it",
+          "translation": "Defi Staking"
+        },
+        {
+          "language_iso": "ko",
+          "translation": "Defi Staking"
+        }
+      ]
+    },
+    {
+      "term": "auto top-up",
+      "part_of_speech": "none",
+      "description": "App feature that allows you to automatically fund your card when its balance falls below your set threshold.",
+      "translations": [
+        {
+          "language_iso": "en",
+          "translation": "Auto Top-Up",
+          "description": "App feature that allows you to automatically fund your card when its balance falls below your set threshold."
+        },
+        {
+          "language_iso": "es",
+          "translation": "recarga automática"
+        },
+        {
+          "language_iso": "fr",
+          "translation": "recharge automatique"
+        },
+        {
+          "language_iso": "it",
+          "translation": "Ricarica automatica"
+        },
+        {
+          "language_iso": "ko",
+          "translation": "자동 충전"
+        }
+      ]
+    },
+    {
+      "term": "High-Frequency Trading",
+      "part_of_speech": "(n.)",
+      "description": "(n.) High-frequency trading (HFT) is a trading method that uses powerful computer programs to transact a large number of orders in fractions of a second. HFT uses complex algorithms to analyze multiple markets and execute orders based on market conditions.",
+      "translations": [
+        {
+          "language_iso": "en",
+          "translation": "High-Frequency Trading",
+          "description": "(n.) High-frequency trading (HFT) is a trading method that uses powerful computer programs to transact a large number of orders in fractions of a second. HFT uses complex algorithms to analyze multiple markets and execute orders based on market conditions."
+        },
+        {
+          "language_iso": "es",
+          "translation": "negociación de alta frecuencia"
+        },
+        {
+          "language_iso": "fr",
+          "translation": "trading à haute fréquence"
+        },
+        {
+          "language_iso": "it",
+          "translation": "trading ad alta frequenza"
+        },
+        {
+          "language_iso": "ko",
+          "translation": "고빈도 거래"
+        }
+      ]
+    },
+    {
+      "term": "price grid",
+      "part_of_speech": "(n.)",
+      "description": "(n.) A structured set of strategic price levels used in grid trading, where a bot helps traders place buy and sell orders at predefined intervals within the grid to optimize trading based on market fluctuations.",
+      "translations": [
+        {
+          "language_iso": "en",
+          "translation": "price grid",
+          "description": "(n.) A structured set of strategic price levels used in grid trading, where a bot helps traders place buy and sell orders at predefined intervals within the grid to optimize trading based on market fluctuations."
+        },
+        {
+          "language_iso": "es",
+          "translation": "grid de precios"
+        },
+        {
+          "language_iso": "fr",
+          "translation": "grille de prix"
+        },
+        {
+          "language_iso": "it",
+          "translation": "prezzo grid"
+        },
+        {
+          "language_iso": "ko",
+          "translation": "가격 그리드"
+        }
+      ]
+    },
+    {
+      "term": "Welcome Bonus",
+      "part_of_speech": "(n.)",
+      "description": "(n.) The Welcome Bonus is aimed at new users. They can earn their bonus by trading a minimum amount.",
+      "translations": [
+        {
+          "language_iso": "en",
+          "translation": "Welcome Bonus",
+          "description": "(n.) The Welcome Bonus is aimed at new users. They can earn their bonus by trading a minimum amount."
+        },
+        {
+          "language_iso": "es",
+          "translation": "bonificación de bienvenida"
+        },
+        {
+          "language_iso": "fr",
+          "translation": "bonus de bienvenue"
+        },
+        {
+          "language_iso": "it",
+          "translation": "bonus di benvenuto"
+        },
+        {
+          "language_iso": "ko",
+          "translation": "환영 보너스"
+        }
+      ]
+    },
+    {
+      "term": "Welcome Pack",
+      "part_of_speech": "(n.)",
+      "description": "(n.) The Welcome Pack is a series of Missions that Crypto.com App users can complete in their first 90 days to earn up to US$500 worth of token rewards.",
+      "translations": [
+        {
+          "language_iso": "en",
+          "translation": "Welcome Pack"
+        },
+        {
+          "language_iso": "es",
+          "translation": "paquete de bienvenida"
+        },
+        {
+          "language_iso": "fr",
+          "translation": "Pack de bienvenue"
+        },
+        {
+          "language_iso": "it",
+          "translation": "pacchetto di benvenuto"
+        },
+        {
+          "language_iso": "ko",
+          "translation": "환영 팩"
+        }
+      ]
+    },
+    {
+      "term": "National Best Bid and Offer",
+      "part_of_speech": "(n.)",
+      "description": "(n.) The National Best Bid and Offer (NBBO) is the best bid and offer price for a security aggregated from among all exchanges in the country.",
+      "translations": [
+        {
+          "language_iso": "en",
+          "translation": "National Best Bid and Offer",
+          "description": "(n.) The National Best Bid and Offer (NBBO) is the best bid and offer price for a security aggregated from among all exchanges in the country."
+        },
+        {
+          "language_iso": "es",
+          "translation": "mejor oferta y demanda nacional"
+        },
+        {
+          "language_iso": "fr",
+          "translation": "Meilleure offre et demande nationale"
+        },
+        {
+          "language_iso": "it",
+          "translation": "National Best Bid and Offer",
+          "description": "Widely recognized in the global financial sector and has a specific technical meaning"
+        },
+        {
+          "language_iso": "ko",
+          "translation": "전국 최적 호가 제안"
+        }
+      ]
+    },
+    {
+      "term": "native token",
+      "part_of_speech": "(n.)",
+      "description": "(n.) The same term applied for \"native x\". It is an integral part of the operation of the network protocol it is issued on. These tokens are created at the network's genesis and are often used to pay transaction fees or stake in DPoS systems.",
+      "translations": [
+        {
+          "language_iso": "en",
+          "translation": "native token"
+        },
+        {
+          "language_iso": "es",
+          "translation": "token nativo"
+        },
+        {
+          "language_iso": "fr",
+          "translation": "token natif"
+        },
+        {
+          "language_iso": "it",
+          "translation": "token nativo"
+        },
+        {
+          "language_iso": "ko",
+          "translation": "네이티브 토큰"
+        }
+      ]
+    },
+    {
+      "term": "NBBO",
+      "part_of_speech": "(n.)",
+      "description": "(n.) The National Best Bid and Offer (NBBO) is the best bid and offer price for a security aggregated from among all exchanges in the country.",
+      "translations": [
+        {
+          "language_iso": "en",
+          "translation": "NBBO",
+          "description": "(n.) The National Best Bid and Offer (NBBO) is the best bid and offer price for a security aggregated from among all exchanges in the country."
+        },
+        {
+          "language_iso": "es",
+          "translation": "NBBO"
+        },
+        {
+          "language_iso": "fr",
+          "translation": "NBBO"
+        },
+        {
+          "language_iso": "it",
+          "translation": "NBBO",
+          "description": "Widely recognized in the global financial sector and has a specific technical meaning"
+        },
+        {
+          "language_iso": "ko",
+          "translation": "NBBO"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local Development
+.env
+.env.local
+*.sqlite3
+
+# Docker
+Dockerfile
+Dockerfile.celery
+docker-compose.yml
+
+# Git
+.git
+.gitignore
+
+# Misc
+*.log
+.DS_Store 
