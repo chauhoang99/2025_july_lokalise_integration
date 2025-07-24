@@ -68,7 +68,7 @@ class TranslationPipeline:
         relevant_terms = self._get_relevant_glossary_terms(source_text, target_language)
         glossary_section = self._format_glossary_terms(relevant_terms)
         
-        prompt = f"""Translate the following text to {target_language}.
+        prompt = f"""Translate the following text to {'Italian' if target_language == 'it' else target_language}.
 
 Here is the glossary:
 {glossary_section}
