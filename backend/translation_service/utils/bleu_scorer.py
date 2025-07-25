@@ -2,24 +2,25 @@ import nltk
 from nltk.translate.bleu_score import sentence_bleu
 from typing import List
 import re
+import string
 
 def preprocess_text(text: str) -> List[str]:
     """
     Preprocess text for BLEU score computation:
     1. Convert to lowercase
-    2. Normalize whitespace
-    3. Remove excessive punctuation
+    2. Remove all punctuation
+    3. Normalize whitespace
     4. Tokenize into words
     """
     # Convert to lowercase
     text = text.lower()
-    
+
+    # Remove all punctuation
+    text = text.translate(str.maketrans('', '', string.punctuation))
+
     # Normalize whitespace
     text = ' '.join(text.split())
-    
-    # Remove excessive punctuation but keep essential ones
-    text = re.sub(r'([.,!?;:])\1+', r'\1', text)
-    
+
     # Split into words
     return text.split()
 
@@ -55,7 +56,6 @@ def compute_bleu_score(reference: str, candidate: str) -> float:
             hypothesis=candidate_tokens
         )
         
-        # Convert to percentage (0-100 scale)
         return score
         
     except Exception as e:

@@ -94,69 +94,6 @@ class LokaliseService:
         except Exception as e:
             raise Exception(f"Error uploading file: {str(e)}")
 
-    def check_upload_status(self, process_id: str) -> Dict:
-        """
-        Check the status of a file upload process
-        """
-        try:
-            response = self.client.process_retrieve(process_id)
-            
-            return {
-                "status": response.status,
-                "process_id": process_id,
-                "project_id": self.project_id,
-                "details": {
-                    "type": getattr(response, 'type', 'file-import'),
-                    "created_at": getattr(response, 'created_at', None),
-                    "created_by": getattr(response, 'created_by', None),
-                    "created_by_email": getattr(response, 'created_by_email', None)
-                }
-            }
-            
-        except Exception as e:
-            raise Exception(f"Error checking upload status: {str(e)}")
-
-    def get_glossary(self) -> List[Dict]:
-        """Fetch glossary terms from Lokalise"""
-        try:
-            glossary = self.client.glossary_list(self.project_id)
-            # Extract terms from glossary
-            terms = []
-            for entry in glossary:
-                for term in entry.terms:
-                    terms.append({
-                        'term': term.term,
-                        'translation': term.translations[0].value if term.translations else None,
-                        'description': term.description,
-                        'part_of_speech': term.part_of_speech
-                    })
-            return terms
-        except Exception as e:
-            raise Exception(f"Error fetching glossary: {str(e)}")
-
-    def get_untranslated_keys(self, target_language: str) -> List[Dict]:
-        """Get keys that need translation for target language"""
-        try:
-            response = self.client.keys(
-                project_id=self.project_id,
-                params={
-                    'filter_untranslated': target_language,
-                    'limit': 100
-                }
-            )
-            # The response is already a list of keys
-            return [{
-                'key_id': key.key_id,
-                'key_name': key.key_name,
-                'source_text': key.translations.get('en', {}).get('value', ''),
-                'platform_mask': key.platforms,
-                'tags': key.tags
-            } for key in response]  # Use response directly
-        except Exception as e:
-            print(f"Debug - Response type: {type(response)}")  # Debug log
-            print(f"Debug - Response: {response}")  # Debug log
-            raise Exception(f"Error fetching untranslated keys: {str(e)}")
-
     def get_all_keys(self, include_translations: bool = True) -> List[Dict]:
         """Get all keys from the project"""
         try:
@@ -265,7 +202,6 @@ class LokaliseService:
                 
         return results
 
-    def mark_translation_reviewed(self, key_id: str, language_code: str) -> Dict:
         """Mark a translation as reviewed"""
         try:
             response = self.client.translations(
