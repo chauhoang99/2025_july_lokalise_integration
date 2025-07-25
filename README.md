@@ -18,17 +18,15 @@ cd 2025_july_lokalise_integration
 
 2. **Set Up Environment Variables**
 
-Environment Variables are hard-coded in docker-compose file
-Yes it is not a good practice but should be fine for a POC
-The API keys can be disable at any time so should not be a big problem
-
-LOKALISE_API_KEY=your_lokalise_api_key
-LOKALISE_PROJECT_ID=your_lokalise_project_id
-OPEN_ROUTER_API_KEY=your_openrouter_api_key
+Environment Variables are hard-coded in docker-compose file. Yes it is not a good practice but should be fine for a POC. The API keys can be disable at any time so should not be a big problem
+```
+LOKALISE_API_KEY=b6527880074de76eaf7e56c11a5992d099cdf543
+LOKALISE_PROJECT_ID=2567109568819f583590a8.57930632
+OPEN_ROUTER_API_KEY=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
 SECRET_KEY=django_secret_key
 DEBUG=True
 NUXT_PUBLIC_API_BASE=http://web:8000/api
-
+```
 3. **Build and Run with Docker**
 ```bash
 # Build and start all services
@@ -38,6 +36,8 @@ docker-compose up -d --build
 4. **Access the Application**
 - Frontend UI: http://localhost:3000
 - Backend API: http://localhost:8000/api
+
+## (If everything is OK you can stop reading from here)
 
 ## Troubleshooting Docker Issues
 
