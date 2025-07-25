@@ -12,8 +12,8 @@ This project implements an automated translation pipeline that integrates Lokali
 
 1. **Clone the Repository**
 ```bash
-git clone <repository-url>
-cd <repository-name>
+git clone https://github.com/chauhoang99/2025_july_lokalise_integration.git
+cd 2025_july_lokalise_integration
 ```
 
 2. **Set Up Environment Variables**
