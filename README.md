@@ -36,6 +36,7 @@ docker-compose up -d --build
 4. **Access the Application**
 - Frontend UI: http://localhost:3000
 - Backend API: http://localhost:8000/api
+- The Frontend may takes a few more seconds to compile after the Docker container is up.
 
 ## (If everything is OK you can stop reading from here)
 
