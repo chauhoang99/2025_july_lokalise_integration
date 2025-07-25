@@ -18,7 +18,7 @@ class LokaliseService:
         Detect file format and return appropriate Lokalise options
         """
         file_ext = os.path.splitext(filename.lower())[1]
-        base_name = os.path.splitext(os.path.splitext(filename)[0])[0]
+        base_name = os.path.splitext(filename)[0]
         
         # Handle nested formats
         if file_ext in ['.json', '.yml', '.yaml'] and base_name.endswith('.nested'):
