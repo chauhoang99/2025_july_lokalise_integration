@@ -54,32 +54,31 @@ class TranslationViewSet(viewsets.ViewSet):
         """
         Check translation quality and compute BLEU score between existing and LLM translations
         """
-        # try:
-        source_text = request.data.get('source_text')
-        existing_translation = request.data.get('existing_translation')
-        llm_translation = request.data.get('llm_translation')
-        target_language = request.data.get('target_language')
+        try:
+            source_text = request.data.get('source_text')
+            existing_translation = request.data.get('existing_translation')
+            llm_translation = request.data.get('llm_translation')
+            target_language = request.data.get('target_language')
 
-        if not all([source_text, existing_translation, llm_translation, target_language]):
-            return Response(
-                {"error": "Missing required fields"},
-                status=status.HTTP_400_BAD_REQUEST
+            if not all([source_text, existing_translation, llm_translation, target_language]):
+                return Response(
+                    {"error": "Missing required fields"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            # Use translation service for quality check
+            result = self.translation_service.check_translation_quality(
+                source_text,
+                existing_translation,
+                llm_translation,
             )
 
-        # Use translation service for quality check
-        result = self.translation_service.check_translation_quality(
-            source_text,
-            existing_translation,
-            llm_translation,
-        )
-
-        return Response(result, status=status.HTTP_200_OK)
-
-        # except Exception as e:
-        #     return Response(
-        #         {"error": str(e)},
-        #         status=status.HTTP_500_INTERNAL_SERVER_ERROR
-        #     )
+            return Response(result, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
     @action(detail=False, methods=['POST'], url_path='process-translations')
     def process_translations(self, request) -> Response:

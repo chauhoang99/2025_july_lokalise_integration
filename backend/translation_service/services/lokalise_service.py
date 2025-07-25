@@ -159,29 +159,28 @@ class LokaliseService:
 
     def get_all_keys(self, include_translations: bool = True) -> List[Dict]:
         """Get all keys from the project"""
-        # try:
-        params = {
-            'limit': 1000,  # Adjust as needed
-            'include_translations': 1 if include_translations else 0
-        }
-        response = self.client.keys(
-            project_id=self.project_id,
-            params=params
-        )
-        # The response is already a list of keys
-        return [{
-            'key_id': key.key_id,
-            'key_name': key.key_name,
-            'translations': key.translations if include_translations else [],
-            'tags': key.tags or [],
-            'description': key.description,
-            'platforms': key.platforms
-        } for key in response.items]
-            
-        # except Exception as e:
-        #     print(f"Debug - Response type: {type(response)}")  # Debug log
-        #     print(f"Debug - Response: {response}")  # Debug log
-        #     raise Exception(f"Error fetching keys: {str(e)}")
+        try:
+            params = {
+                'limit': 1000,  # Adjust as needed
+                'include_translations': 1 if include_translations else 0
+            }
+            response = self.client.keys(
+                project_id=self.project_id,
+                params=params
+            )
+            # The response is already a list of keys
+            return [{
+                'key_id': key.key_id,
+                'key_name': key.key_name,
+                'translations': key.translations if include_translations else [],
+                'tags': key.tags or [],
+                'description': key.description,
+                'platforms': key.platforms
+            } for key in response.items]            
+        except Exception as e:
+            print(f"Debug - Response type: {type(response)}")  # Debug log
+            print(f"Debug - Response: {response}")  # Debug log
+            raise Exception(f"Error fetching keys: {str(e)}")
 
     def get_key_translations(self, key_id: str) -> Dict:
         """Get translations for a specific key"""
