@@ -18,21 +18,16 @@ cd <repository-name>
 
 2. **Set Up Environment Variables**
 
-Create two `.env` files:
+Environment Variables are hard-coded in docker-compose file
+Yes it is not a good practice but should be fine for a POC
+The API keys can be disable at any time so should not be a big problem
 
-a. In the `backend/` directory, create `backend/.env`:
-```
 LOKALISE_API_KEY=your_lokalise_api_key
 LOKALISE_PROJECT_ID=your_lokalise_project_id
 OPEN_ROUTER_API_KEY=your_openrouter_api_key
 SECRET_KEY=django_secret_key
 DEBUG=True
-```
-
-b. In the `frontend/` directory, create `frontend/.env`:
-```
 NUXT_PUBLIC_API_BASE=http://web:8000/api
-```
 
 3. **Build and Run with Docker**
 ```bash
